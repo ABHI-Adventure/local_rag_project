@@ -9,35 +9,32 @@ The system runs fully locally using open-source tools, avoiding per-query API co
 
 The system has four main stages:
 
-1. Document Ingestion
+1. **Document Ingestion**
 
     The wiki was exported as Markdown files.
     A Python script recursively loads all .md files from the exported folder.
     
     Each document is processed and prepared for chunking.
 
-2. Chunking Strategy
+2. **Chunking Strategy**
 
-I split documents based on Markdown headers (#, ##, ###).
-
-Reasoning:
-
-Wiki content is already structured using headings.
-
-Each section typically represents a coherent idea or topic.
-
-Chunking at headers preserves semantic structure better than fixed-length chunking.
-
-Very small sections (<50 characters) are ignored to avoid embedding noise.
-
-Each chunk stores metadata including:
-
-source file path
-
-section content
-
-This allows traceability back to the original document.
-
+    I split documents based on Markdown headers (#, ##, ###).
+    
+    Reasoning:
+    
+    * Wiki content is already structured using headings.
+    * Each section typically represents a coherent idea or topic.
+    * Chunking at headers preserves semantic structure better than fixed-length chunking.
+    
+    Very small sections (<50 characters) are ignored to avoid embedding noise.
+    
+    Each chunk stores metadata including:
+    
+    * source file path
+    * section content
+    
+    This allows traceability back to the original document.
+    
 3. Embedding and Vector Storage
 
 Each chunk is converted into an embedding using the nomic-embed-text model via Ollama.
