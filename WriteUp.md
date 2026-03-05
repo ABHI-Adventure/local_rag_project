@@ -57,34 +57,32 @@ The system has four main stages:
 
     When a user asks a question:
     
-    a. The query is embedded using the same embedding model.
-    b. ChromaDB performs vector similarity search to retrieve the most relevant chunks.
-    c. The retrieved chunks are combined into a context block.
-    d.  A local LLM (Phi-3 via Ollama) generates the final answer using the retrieved context.
+    1. The query is embedded using the same embedding model.
+    2. ChromaDB performs vector similarity search to retrieve the most relevant chunks.
+    3. The retrieved chunks are combined into a context block.
+    4. A local LLM (Phi-3 via Ollama) generates the final answer using the retrieved context.
     
     The model is prompted to answer only using the provided context to reduce hallucination.
     
 ## Design Decisions
-Local Models
 
-All models run locally using Ollama to meet the requirement that the system should not incur per-query costs.
+1. **Local Models**
 
-Header-Based Chunking
+    All models run locally using Ollama to meet the requirement that the system should not incur per-query costs.    
 
-Wiki pages already have hierarchical structure.
-Chunking by headers keeps information grouped in meaningful sections.
+2. **Header-Based Chunking**
 
-This improves retrieval accuracy compared to arbitrary token splitting.
+    Wiki pages already have hierarchical structure.
+    Chunking by headers keeps information grouped in meaningful sections.
+    This improves retrieval accuracy compared to arbitrary token splitting.
 
-Simple Vector Database
+3. **Simple Vector Database**
 
-ChromaDB was selected because:
-
-easy setup
-
-no server required
-
-suitable for small to medium document sets
+    ChromaDB was selected because:
+    
+    * easy setup
+    * no server required
+    * suitable for small to medium document sets
 
 ## Limitations
 
@@ -92,74 +90,68 @@ The system has several limitations:
 
 1. No Reranking
 
-Retrieved chunks are based purely on embedding similarity.
-A reranking model could improve answer quality.
+    Retrieved chunks are based purely on embedding similarity.
+    A reranking model could improve answer quality.
 
 2. No Hybrid Search
 
-The system only uses vector search.
-
-Combining:
-
-keyword search (BM25)
-
-vector search
-
-would improve retrieval for exact terms.
+    The system only uses vector search.
+    
+    Combining:
+    
+    * keyword search (BM25)
+    * vector search
+    
+    would improve retrieval for exact terms.
 
 3. Chunk Size Variability
 
-Header-based chunking can produce chunks of uneven size.
-
-Very long sections could exceed optimal context length.
+    Header-based chunking can produce chunks of uneven size.
+    Very long sections could exceed optimal context length.
 
 4. Latency
 
-Because inference runs locally on CPU, generation is slower compared to cloud-based models.
+    Because inference runs locally on CPU, generation is slower compared to cloud-based models.
 
 5. No Evaluation Pipeline
 
-There is currently no automated evaluation for answer accuracy or retrieval quality.
+    There is currently no automated evaluation for answer accuracy or retrieval quality.
 
 ## Potential Improvements
 
 If this system were expanded, the following improvements would be implemented:
 
-Add Hybrid Retrieval
+1. Add Hybrid Retrieval
 
-Combine:
+    Combine:
+    
+    * vector search
+    * keyword search
+    
+    to improve recall.
 
-vector search
+2. Add Reranking
 
-keyword search
+    Use a cross-encoder model to rerank retrieved chunks before passing them to the LLM.
 
-to improve recall.
+3. Improve Chunking
 
-Add Reranking
+    Implement token-based chunking with overlap to ensure important information is not split across chunks.
 
-Use a cross-encoder model to rerank retrieved chunks before passing them to the LLM.
+4. Add Source Citations
 
-Improve Chunking
+    Return the original document source along with the generated answer.
 
-Implement token-based chunking with overlap to ensure important information is not split across chunks.
+5. Persistent Indexing
 
-Add Source Citations
-
-Return the original document source along with the generated answer.
-
-Persistent Indexing
-
-Currently the system re-indexes documents each time it runs.
-Persisting the vector database would improve startup time.
+    Currently the system re-indexes documents each time it runs.
+    Persisting the vector database would improve startup time.
 
 ## Where It Breaks
 
 The system can fail in several scenarios:
 
-Questions requiring reasoning across multiple documents.
-
-Queries that use terminology not present in the documents.
-
-Very long sections where important information is buried inside large chunks.
-
-Ambiguous queries that retrieve irrelevant context.
+* Questions requiring reasoning across multiple documents.
+* Queries that use terminology not present in the documents.
+* Very long sections where important information is buried inside large chunks.
+* Ambiguous queries that retrieve irrelevant context.
