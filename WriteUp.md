@@ -11,10 +11,10 @@ The system has four main stages:
 
 1. Document Ingestion
 
-The wiki was exported as Markdown files.
-A Python script recursively loads all .md files from the exported folder.
-
-Each document is processed and prepared for chunking.
+    The wiki was exported as Markdown files.
+    A Python script recursively loads all .md files from the exported folder.
+    
+    Each document is processed and prepared for chunking.
 
 2. Chunking Strategy
 
