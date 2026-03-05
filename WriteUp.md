@@ -35,42 +35,35 @@ The system has four main stages:
     
     This allows traceability back to the original document.
     
-3. Embedding and Vector Storage
+3. **Embedding and Vector Storage**
 
-Each chunk is converted into an embedding using the nomic-embed-text model via Ollama.
+    Each chunk is converted into an embedding using the `nomic-embed-text` model via Ollama.
+    
+    Reasons for this choice:
+    
+    * Lightweight
+    * Runs locally
+    * Designed for semantic search tasks
+    
+    Embeddings are stored in ChromaDB, a simple local vector database.
+    
+    Chroma allows:
+    
+    * fast similarity search
+    * simple setup without external infrastructure
+    * local persistence
+    
+4. **Retrieval + Generation**
 
-Reasons for this choice:
-
-Lightweight
-
-Runs locally
-
-Designed for semantic search tasks
-
-Embeddings are stored in ChromaDB, a simple local vector database.
-
-Chroma allows:
-
-fast similarity search
-
-simple setup without external infrastructure
-
-local persistence
-
-4. Retrieval + Generation
-
-When a user asks a question:
-
-The query is embedded using the same embedding model.
-
-ChromaDB performs vector similarity search to retrieve the most relevant chunks.
-
-The retrieved chunks are combined into a context block.
-
-A local LLM (Phi-3 via Ollama) generates the final answer using the retrieved context.
-
-The model is prompted to answer only using the provided context to reduce hallucination.
-
+    When a user asks a question:
+    
+    a. The query is embedded using the same embedding model.
+    b. ChromaDB performs vector similarity search to retrieve the most relevant chunks.
+    c. The retrieved chunks are combined into a context block.
+    d.  A local LLM (Phi-3 via Ollama) generates the final answer using the retrieved context.
+    
+    The model is prompted to answer only using the provided context to reduce hallucination.
+    
 ## Design Decisions
 Local Models
 
