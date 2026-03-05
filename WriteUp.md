@@ -1,11 +1,11 @@
 # Local RAG System for Wyrd Media Labs Wiki
-Overview
+## Overview
 
 I built a local Retrieval-Augmented Generation (RAG) system that answers questions about the Wyrd Media Labs company wiki. The system ingests exported Markdown documents from the wiki, converts them into vector embeddings, stores them in a local vector database, retrieves the most relevant sections for a query, and uses a local language model to generate answers grounded in the retrieved context.
 
 The system runs fully locally using open-source tools, avoiding per-query API costs.
 
-Architecture
+## Architecture
 
 The system has four main stages:
 
@@ -74,7 +74,7 @@ A local LLM (Phi-3 via Ollama) generates the final answer using the retrieved co
 
 The model is prompted to answer only using the provided context to reduce hallucination.
 
-Design Decisions
+## Design Decisions
 Local Models
 
 All models run locally using Ollama to meet the requirement that the system should not incur per-query costs.
@@ -96,7 +96,7 @@ no server required
 
 suitable for small to medium document sets
 
-Limitations
+## Limitations
 
 The system has several limitations:
 
@@ -131,7 +131,7 @@ Because inference runs locally on CPU, generation is slower compared to cloud-ba
 
 There is currently no automated evaluation for answer accuracy or retrieval quality.
 
-Potential Improvements
+## Potential Improvements
 
 If this system were expanded, the following improvements would be implemented:
 
@@ -162,7 +162,7 @@ Persistent Indexing
 Currently the system re-indexes documents each time it runs.
 Persisting the vector database would improve startup time.
 
-Where It Breaks
+## Where It Breaks
 
 The system can fail in several scenarios:
 
